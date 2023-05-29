@@ -30,7 +30,7 @@ app.use((_, res) => {
 
 
 //Init server
-app.listen(ENV.API_PORT, () => {
-    console.log(`Server running on port 3000`);
+app.listen(3000, () => {
+    console.log(`Server running on port ${ENV.API_PORT}`);
 })
 //${ENV.API_PORT}
