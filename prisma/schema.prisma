@@ -12,20 +12,81 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  lastname String?
-  posts Post[]
+model Personajes {
+  id        Int @id @default(autoincrement())
+  nombre    String  @db.VarChar(45)
+  fuerza    Int
+  fecha_nacimiento DateTime @db.Date
+  objeto     String?  @db.VarChar(30)
+  Karts      Karts[]
+  Personaje_tiene_trabajo   Personaje_tiene_trabajo[]
+  Personaje_habita_reino    Personaje_habita_reino[]
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Karts {
+  id        Int @id @default(autoincrement())
+  modelo    String  @db.VarChar(45)
+  color     String  @db.VarChar(45)
+  velocidad_max Int?
+  id_personaje  Int
+  Personajes  Personajes @relation(fields:[id_personaje], references: [id])
 }
 
+model Trabajos {
+  id            Int @id @default(autoincrement())
+  descripcion   String? @db.VarChar(45)
+  sueldo        Int 
+  Personaje_tiene_trabajo    Personaje_tiene_trabajo[] 
+}
+
+model Personaje_tiene_trabajo {
+  id_trabajo    Int 
+  Trabajos      Trabajos @relation(fields:[id_trabajo], references: [id])
+  id_personaje  Int 
+  Personajes    Personajes @relation(fields:[id_personaje], references: [id]) 
+  fecha_inicio  DateTime @db.Date
+  fecha_termino DateTime? @db.Date
+  @@id([id_trabajo,id_personaje])
+}
+model Defensas {
+  id            Int @id @default(autoincrement())
+  Defenzas      String  @db.VarChar(45)
+  reinos        DefensasReinos[]
+}
+model Reinos {
+  id            Int @id @default(autoincrement())
+  nombre        String  @db.VarChar(45)
+  ubicacion     String  @db.VarChar(45)
+  superficie    Int
+  Personaje_habita_reino  Personaje_habita_reino[]
+  defensas     DefensasReinos[]
+  diplomacias   Diplomacias[]
+  
+
+}
+model DefensasReinos {
+  defensas     Defensas @relation(fields:[id_defensas], references:[id])
+  id_defensas  Int
+  reinos        Reinos @relation(fields:[id_reino],references:[id])
+  id_reino      Int
+  
+  @@id([id_defensas,id_reino])
+}
+model Diplomacias {
+  reino1 Reinos @relation(fields: [id_reino1], references: [id])
+  //reino2 Reinos @relation(fields: [id_reino2], references: [id])
+  id_reino1      Int
+  id_reino2      Int
+  es_aliado      Boolean @default(false)
+  @@id([id_reino1,id_reino2])
+}
+
+model Personaje_habita_reino {
+  id_personaje  Int
+  Personajes    Personajes @relation(fields: [id_personaje], references: [id])
+  id_reino      Int
+  Reinos        Reinos @relation(fields:[id_reino], references:[id])
+  fecha_registro DateTime @db.Date
+  es_gobernante  Boolean @default(false)
+  @@id([id_personaje,id_reino])
+}
