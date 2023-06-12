@@ -4,16 +4,20 @@ import prisma from '../prismaClient.js'
 const getPersonajes = async (req , res) => {
     // get para obtener todos los datos de la tabla personajes
     const personajes = await prisma.personajes.findMany()
+
     res.json(personajes)
 }
 const getPersonajesById = async (req, res) => {
-    const { id } = req.params
+    const { id } = req.params;
     const personaje = await prisma.personajes.findUnique({
-        where: {
-            id: Number(id)
-        }
+        where: {id: Number(id)},
     })
-    res.json(personaje)
+    if(!personaje){
+        res.json(personaje);
+    }else{
+        res.status(404).json({error:"Personaje No encontrado"});
+    }
+    
 }
 
 //CREATE [POST]
@@ -27,42 +31,56 @@ const createPersonaje = async (req, res) => {
             fecha_nacimiento,
             fecha_nacimiento:fecha_Nacimiento,
             objeto
-        }
+        },
+        //include: {Karts:true}
     })
-    res.json(nuevoPersonaje)
+    res.json(nuevoPersonaje);
 }
 
 //[PUT]
-const PutPersonaje= async(req,res)=>{
+const putPersonaje= async(req,res)=>{
+    const { id }=req.params;
+    const {nombre, fuerza,fecha_nacimiento,objeto}= req.body;
+    const fecha_Nacimiento = new Date(req.body.fecha_nacimiento);
+    const actuPersonaje= await prisma.personajes.update({
+        where: { id: Number(id) },
+        data: { 
+            nombre,
+            fuerza,
+            fecha_nacimiento:fecha_Nacimiento,
+            objeto
+        }
+    })
+    if (nombre && fuerza && fecha_nacimiento){
+        res.json(actuPersonaje);
+    }
+    else{
+        res.status(500).json({error: "hubo un error al actualizar"});
+    }
+    
 
 }
 //[DELETE]
-const PersonajeBorrado= async(req,res)=>{
-    const PersonajeBorrado= await prisma.personajes.delete({
-        where: parseInt(req.params.id)
+const personajeBorrado= async(req,res)=>{
+    const { id } = req.params;
+    const personajeBorrado = await prisma.personajes.delete({
+        where: { id: Number(id) },
     })
-    res.json(PersonajeBorrado)
+    if(personajeBorrado!=null){
+        res.json(personajeBorrado);
+    }
+    else{
+        res.status(400).json({error: "No se ha eliminado,revisa si te equivocaste"});
+    }
+    
 }
-
-
-const personajeKarts = async (req, res) => {
-    const { id } = req.params
-    const user = await prisma.user.findUnique({
-        where: {
-            id: Number(id)
-        },
-        include: {
-            posts: true
-        }
-    })
-    res.json(user)
-}
-
-           
+          
 const PersonajesController = {
     getPersonajes,
     getPersonajesById,
     createPersonaje, 
+    putPersonaje,
+    personajeBorrado
     
 }
 

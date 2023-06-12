@@ -16,9 +16,59 @@ const getReinoById=async (req,res)=>{
       res.json(reino)
 }
 
+//CREATE [POST]
+const postReino = async (req, res) => {
+    const { nombre, ubicacion,superficie } = req.body;
+    const nuevoreino = await prisma.reinos.create({
+        data: {
+            nombre,
+            ubicacion,
+            superficie
+        }
+    })
+    if(nuevoreino!=null){
+        res.json(nuevoreino)
+    }else{
+        res.status(500).json({error: "hubo un error al Crear un Reino"})
+    }
+}
+//[PUT]
+const putReino= async(req,res)=>{
+    const { id }=req.params;
+    const actureino= await prisma.reinos.update({
+        where: { id: Number(id) },
+        data: {nombre, ubicacion, superficie},
+        include: {diplomacias:true}
+    })
+    if (nombre && ubicacion && superficie){
+        res.json(actureino);
+    }
+    else{
+        res.status(500).json({error: "hubo un error al actualizar"});
+    }
+    
 
+}
+//[DELETE]
+const deleteReino= async(req,res)=>{
+    const { id } = req.params;
+    const reinoBorrado = await prisma.reinos.delete({
+        where: { id: Number(id) },
+    })
+    if(reinoBorrado!=null){
+        res.json(reinoBorrado);
+    }
+    else{
+        res.status(400).json({error: "No se ha eliminado,revisa si te equivocaste"});
+    }
+    
+}
 const ReinosController={
     getReinos,
-    getReinoById
+    getReinoById,
+    postReino,
+    putReino,
+    deleteReino
+
 }
 export default ReinosController

@@ -6,6 +6,7 @@ const getTrabajos = async(req , res)=>{
     const trabajos = await prisma.trabajos.findMany()
     res.json(trabajos)
 }
+//get por id
 const getTrabajoById = async (req, res) => {
     const { id } = req.params
     const trabajo = await prisma.trabajos.findUnique({
@@ -26,11 +27,37 @@ const postTrabajos= async(req,res)=>{
     res.json(nuevoTrabajo)
 }
 //PUT
+const putTrabajos= async(req,res)=>{
+    const { id }=req.params;
+    const {descripcion, sueldo}= req.body;
+    const actuTrabajos= await prisma.trabajos.update({
+        where: { id: Number(id) },
+        data: { 
+            descripcion, 
+            sueldo
+        }
+    })
+    if (descripcion || sueldo){
+        res.json(actuPersonaje)
+    }
+    else{
+        res.status(500).json({error: "hubo un error al actualizar"})
+    }
+}
 //DELETE
+const deleteTrabajos= async (req,res)=>{
+    const { id } = req.params
+    const trabajoBorrado = await prisma.trabajos.delete({
+    where: { id: Number(id) },
+    })
+    res.json(trabajoBorrado)
+}
 const TrabajosController = {
     getTrabajos,
     getTrabajoById,
-    postTrabajos
+    postTrabajos,
+    putTrabajos,
+    deleteTrabajos
 }
 
 export default TrabajosController
