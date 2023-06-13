@@ -7,10 +7,10 @@ const getPersonajesTrabajo =async (req, res)=>{
 }
 //GET ID
 const getPersonajesTrabajoById = async(req , res)=>{
-    const {id_personaje}= req.body;
+    const {id}= req.body;
     const personajeConTrabajo=await prisma.personaje_tiene_trabajo.findUnique({
         where :{
-            id : parseInt(id_personaje)
+            id: Number(id_personaje)
         }
     })
 }

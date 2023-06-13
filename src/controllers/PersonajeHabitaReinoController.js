@@ -18,17 +18,18 @@ const getPersonaje_Habita=async (req,res)=>{
 
 //CREATE [POST]
 const postHabitaReino = async (req, res) => {
-    const { id_personaje,id_reino,fecha_registro,es_gobernante } = req.body
-    const fechaRegistro = new Date(req.body.fecha_registro);
+    const { id_personaje,id_reino,es_gobernante } = req.body 
     const nuevo = await prisma.personaje_habita_reino.create({
         data: {
-            id_personaje,
+            id_personaje, 
             id_reino,
-            fecha_registro:fechaRegistro,
-            es_gobernante
-        },
+            es_gobernante}
     })
-    res.json(nuevo);
+    if (nuevo!=null){
+        res.json(nuevo)
+    }else{
+            res.status(500).json({ error: "Error al crear" });
+    }
 }
 
 //[PUT]

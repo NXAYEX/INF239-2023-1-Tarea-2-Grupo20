@@ -29,19 +29,14 @@ const putKarts= async(req,res)=>{
         where: { id: Number(id) },
         data:req.body
     })
-    if (modelo && color && velocidad_max ){
-        res.json(actuKarts);
-    }
-    else{
-        res.status(500).json({error: "hubo un error al actualizar"});
-    }
+   res.json(actuKarts)
 }
 const deleteKarts= async (req,res)=>{
     const { id } = req.params;
     const kartsBorrado = await prisma.karts.delete({
     where: { id: Number(id) },
     })
-    if(!kartsBorrado){
+    if(kartsBorrado!=null){
         res.json(kartsBorrado);
     }else{
         res.status(400).json({error: "No se ha eliminado,revisa si te equivocaste"});

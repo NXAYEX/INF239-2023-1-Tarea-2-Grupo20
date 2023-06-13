@@ -86,7 +86,7 @@ model Personaje_habita_reino {
   Personajes    Personajes @relation(fields: [id_personaje], references: [id])
   id_reino      Int
   Reinos        Reinos @relation(fields:[id_reino], references:[id])
-  fecha_registro DateTime @db.Date
+  fecha_registro DateTime @default(now())
   es_gobernante  Boolean @default(false)
   @@id([id_personaje,id_reino])
 }

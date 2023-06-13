@@ -12,7 +12,7 @@ const getPersonajesById = async (req, res) => {
     const personaje = await prisma.personajes.findUnique({
         where: {id: Number(id)},
     })
-    if(!personaje){
+    if(personaje!=null){
         res.json(personaje);
     }else{
         res.status(404).json({error:"Personaje No encontrado"});
@@ -32,9 +32,13 @@ const createPersonaje = async (req, res) => {
             fecha_nacimiento:fecha_Nacimiento,
             objeto
         },
-        //include: {Karts:true}
     })
-    res.json(nuevoPersonaje);
+    if(nuevoPersonaje!=null){
+        res.json(nuevoPersonaje);
+    }else{
+        res.status(500).json({ error: "Error al crear el personaje" });
+    }
+    
 }
 
 //[PUT]

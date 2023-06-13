@@ -18,6 +18,7 @@ const getTrabajoById = async (req, res) => {
 }
 //POST
 const postTrabajos= async(req,res)=>{
+    const{descripcion,sueldo}=req.body;
     const nuevoTrabajo=await prisma.trabajos.create({
         data:{
             descripcion,
@@ -37,12 +38,7 @@ const putTrabajos= async(req,res)=>{
             sueldo
         }
     })
-    if (descripcion || sueldo){
-        res.json(actuPersonaje)
-    }
-    else{
-        res.status(500).json({error: "hubo un error al actualizar"})
-    }
+    res.json(actuTrabajos)
 }
 //DELETE
 const deleteTrabajos= async (req,res)=>{

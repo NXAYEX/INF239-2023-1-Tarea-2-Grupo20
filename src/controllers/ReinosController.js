@@ -26,11 +26,13 @@ const postReino = async (req, res) => {
             superficie
         }
     })
-    if(nuevoreino!=null){
+    res.json(nuevoreino)
+    /*
+    if(nuevoreino!=error){
         res.json(nuevoreino)
     }else{
         res.status(500).json({error: "hubo un error al Crear un Reino"})
-    }
+    }*/
 }
 //[PUT]
 const putReino= async(req,res)=>{
@@ -55,13 +57,7 @@ const deleteReino= async(req,res)=>{
     const reinoBorrado = await prisma.reinos.delete({
         where: { id: Number(id) },
     })
-    if(reinoBorrado!=null){
-        res.json(reinoBorrado);
-    }
-    else{
-        res.status(400).json({error: "No se ha eliminado,revisa si te equivocaste"});
-    }
-    
+    res.json(reinoBorrado);
 }
 const ReinosController={
     getReinos,
